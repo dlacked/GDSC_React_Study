@@ -3,6 +3,7 @@ import './App.css'
 import DiaryEditor from './DiaryEditor'
 import DiaryList from './DiaryList'
 import OptimizeTest from './OptimizeTest';
+import { useCallback } from 'react';
 
 function App() {
   const [data, setData] = useState([])
@@ -29,7 +30,7 @@ function App() {
     getData()
   }, [])
 
-  const onCreate = (author, content, emotion) => {
+  const onCreate = useCallback((author, content, emotion) => {
     const created_date = new Date().getTime()
     const newItem = {
       author,
@@ -39,8 +40,8 @@ function App() {
       id : dataId.current
     }
     dataId.current += 1
-    setData([newItem, ...data])
-  }
+    setData((data)=>[newItem, ...data])
+  }, [])
 
   const onRemove = (targetId)=>{
     const newDiaryList = data.filter((it)=>it.id !== targetId)
@@ -50,7 +51,7 @@ function App() {
   const onEdit = (targetId, newContent) => {
     setData(
       data.map((it)=>it.id === targetId ? {...it, content:newContent}: it)
-    )
+    ) 
   }
 
   const getDiaryAnalysis = useMemo(() => {
